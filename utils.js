@@ -12,40 +12,82 @@ exports.ArrayOf_Countries_Urls_By_html1 = (html1) => {
 }
 
 
-exports.AbroadCountries_InLocalCountries_By_html2 = async(html2, RepresentationtLocCountry) => {
-const ArrayOf_abroadCountries_InLocalCountries=[];
+exports.AbroadCountries_InLocalCountries_By_html2 = async (html2, RepresentationtLocCountry) => {
+    const ArrayOf_abroadCountries_InLocalCountries = [];
 
     let abroadCountries_InLocalCountries = {};
-//const RepresentationtLocCountry =RepresentationtLocCountry;
+
 
     $('#posts-container>div:nth-child(3)>h2', html2).map((i, el) => {
 
-      const RepresentationCountry = $(`#posts-container>div:nth-child(3)>h2`, html2)[i].children[0].data;
+        const RepresentationCountry = $(`#posts-container>div:nth-child(3)>h2`, html2)[i].children[0].data;
         $(`#posts-container>div:nth-child(3)>ul:nth-child(${(i * 2) + 3})>li`, html2).map((k, e) => {
-           
+
             const x = $(`#posts-container>div:nth-child(3)>ul:nth-child(${(i * 2) + 3})>li>a`, html2)[k]
             const url = x.attribs.href;
             const title = x.attribs.title;
-            
-           const  Type_Name_LocCity =  get_Type_Name_LocCity(title)
-          abroadCountries_InLocalCountries = Object.assign(
-              {},
-             Type_Name_LocCity,
-             {
-             RepresentationtLocCountry :RepresentationtLocCountry,
-            RepresentationCountry:RepresentationCountry,
-             url:url,
-             }
-             );
-             //console.log(abroadCountries_InLocalCountries)  
-             ArrayOf_abroadCountries_InLocalCountries.push(abroadCountries_InLocalCountries);
+
+            const Type_Name_LocCity = get_Type_Name_LocCity(title)
+            abroadCountries_InLocalCountries = Object.assign(
+                {},
+                Type_Name_LocCity,
+                {
+                    RepresentationtLocCountry: RepresentationtLocCountry,
+                    RepresentationCountry: RepresentationCountry,
+                    url: url,
+                }
+            );
+            //console.log(abroadCountries_InLocalCountries)  
+            ArrayOf_abroadCountries_InLocalCountries.push(abroadCountries_InLocalCountries);
         })
 
 
     })
-    
-  return ArrayOf_abroadCountries_InLocalCountries; 
+
+    return ArrayOf_abroadCountries_InLocalCountries;
 }
+
+
+
+exports.LocalCountries_In_AbroadCountries__By_html2 = async (html2, RepresentationCountry) => {
+
+    const ArrayOf_LocalCountries_In_AbroadCountries = [];
+
+    let LocalCountries_In_AbroadCountries = {};
+
+
+    $('#posts-container>div:nth-child(2)>h2', html2).map((i, el) => {
+
+        const RepresentationLocCountry = $(`#posts-container>div:nth-child(2)>h2`, html2)[i].children[0].data;
+        $(`#posts-container>div:nth-child(2)>ul:nth-child(${(i * 2) + 3})>li`, html2).map((k, e) => {
+
+            const x = $(`#posts-container>div:nth-child(2)>ul:nth-child(${(i * 2) + 3})>li>a`, html2)[k]
+            const url = x.attribs.href;
+            const title = x.children[0].data
+
+            const Type_Name_LocCity = get_Type_Name_LocCity(title)
+            LocalCountries_In_AbroadCountries = Object.assign(
+                {},
+                Type_Name_LocCity,
+                {
+                    RepresentationtLocCountry: RepresentationLocCountry,
+                    RepresentationCountry: RepresentationCountry,
+                    url: url,
+                }
+            );
+            // console.log(LocalCountries_In_AbroadCountries)  
+            ArrayOf_LocalCountries_In_AbroadCountries.push(LocalCountries_In_AbroadCountries);
+        })
+
+
+    })
+   // console.log(ArrayOf_LocalCountries_In_AbroadCountries)
+    return ArrayOf_LocalCountries_In_AbroadCountries;
+
+}
+
+
+
 
 
 
@@ -74,8 +116,8 @@ const get_Type_Name_LocCity = (title) => {
         else {
             Type_Name_LocCity.RepresentationType = 'Other';
         };
-      //console.log(Type_Name_LocCity);
-      return (Type_Name_LocCity);
+        //console.log(Type_Name_LocCity);
+        return (Type_Name_LocCity);
     }
 
 }

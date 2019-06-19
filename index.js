@@ -34,11 +34,10 @@ console.log(ArrayOf_Countries_Urls.length)
 if(html2_pages_Array && Array.isArray(html2_pages_Array)){
   for(let a=0;a<html2_pages_Array.length;a++){
   const country= ArrayOf_Countries_Urls_Data[a].country
-  const ArrayOf_abroadCountries_InLocalCountries = await utils.AbroadCountries_InLocalCountries_By_html2(html2_pages_Array[a],country);
-    // console.log(html2_pages_Array[a])
-    // console.log(html2_pages_Array.length,country);
-    console.log(ArrayOf_abroadCountries_InLocalCountries);
-
+ const ArrayOf_abroadCountries_InLocalCountries = await utils.AbroadCountries_InLocalCountries_By_html2(html2_pages_Array[a],country); 
+  //console.log(ArrayOf_abroadCountries_InLocalCountries);
+  const ArrayOf_LocalCountries_In_AbroadCountries=  utils.LocalCountries_In_AbroadCountries__By_html2(html2_pages_Array[a],country);
+//console.log(ArrayOf_LocalCountries_In_AbroadCountries);
   }
 }
 })
