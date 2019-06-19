@@ -10,8 +10,8 @@
             "type": "node",
             "request": "launch",
             "name": "Launch Program",
-           // "program": "${workspaceFolder}\\index.js"
-         "program": "${workspaceFolder}\\funCreate.js"
+           "program": "${workspaceFolder}\\index.js"
+         //"program": "${workspaceFolder}\\funCreate.js"
         }
     ]
 }
