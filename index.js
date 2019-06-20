@@ -1,17 +1,12 @@
 'use strict';
 const rp = require('request-promise');
 const utils = require('./utils');
-//const Promise = require('bluebird');
-
-//const otcsv = require('objects-to-csv');  
+const otcsv = require('objects-to-csv');  
 //const $ = require('cheerio'); 
 const url = 'https://www.embassy-worldwide.com/'
 let ArrayOf_Countries_Urls_Data = [];
 let ArrayOf_All_local_Abroad_country=[];
-let ArrayOf_All_Unique_local_Abroad_country=[];
-
-let final_List=[];
-
+let  ArrayOf_All_Unique_local_Abroad_country =[];
 const LoopRun = async (a, b,arr) => {
   if (arr) {
     const allReq = [];
@@ -71,72 +66,73 @@ const getList = async () => {
           const country = ArrayOf_Countries_Urls_Data[a].country
           console.log(country)
           const ArrayOf_abroadCountries_InLocalCountries = await utils.AbroadCountries_InLocalCountries_By_html2(html2_pages_Array[a], country);
-          console.log(ArrayOf_abroadCountries_InLocalCountries.length);
+          console.log("abroad in local : "+ArrayOf_abroadCountries_InLocalCountries.length);
           All_ArrayOf_abroadCountries_InLocalCountries.push(...ArrayOf_abroadCountries_InLocalCountries);
 
           const ArrayOf_LocalCountries_In_AbroadCountries = await utils.LocalCountries_In_AbroadCountries__By_html2(html2_pages_Array[a], country);
-          console.log(ArrayOf_LocalCountries_In_AbroadCountries.length);
+          console.log("local in abroad : "+ArrayOf_LocalCountries_In_AbroadCountries.length);
           All_ArrayOf_LocalCountries_In_AbroadCountries.push(...ArrayOf_LocalCountries_In_AbroadCountries);
         }
-        console.log(All_ArrayOf_abroadCountries_InLocalCountries.length);
-        console.log(All_ArrayOf_LocalCountries_In_AbroadCountries.length);
+        console.log("all abroad in local : "+All_ArrayOf_abroadCountries_InLocalCountries.length);
+        console.log("all local in abroad :"+All_ArrayOf_LocalCountries_In_AbroadCountries.length);
         ArrayOf_All_local_Abroad_country.push(...All_ArrayOf_abroadCountries_InLocalCountries)
         ArrayOf_All_local_Abroad_country.push(...All_ArrayOf_LocalCountries_In_AbroadCountries)
         return ArrayOf_All_local_Abroad_country;
       }
     })
     .then(async(ArrayOf_All_local_Abroad_country)=>{
-      console.log(ArrayOf_All_local_Abroad_country.length);
+      console.log("all local + abroad : "+ArrayOf_All_local_Abroad_country.length);
        const uniq_ArrayOf_All_local_Abroad_country=await utils.removeDuplicates(ArrayOf_All_local_Abroad_country)
-      console.log(uniq_ArrayOf_All_local_Abroad_country.length)
-     // return(uniq_ArrayOf_All_local_Abroad_country)
+      console.log("all local + abroad after duplicate removed : "+uniq_ArrayOf_All_local_Abroad_country.length)
+     return(uniq_ArrayOf_All_local_Abroad_country)
     })
     .then(async (uniq_ArrayOf_All_local_Abroad_country) => {
       const array_of_html3 = [];
       ArrayOf_All_Unique_local_Abroad_country = uniq_ArrayOf_All_local_Abroad_country;
-      console.log(uniq_ArrayOf_All_local_Abroad_country.length)
+      console.log("all local + abroad pass for html3 : "+uniq_ArrayOf_All_local_Abroad_country.length)
 
       
-    //   let a = 0, b = 25;
-    //   for (let k = 1; k <= 9; k++) {
-    //  console.log(k)
-    //     if (k == 9) {
-    //       const d1 = await LoopRun(a = 201, b = 211,uniq_ArrayOf_All_local_Abroad_country);
-    //       array_of_html3.push(...d1)
-    //     }
-    //     else {
-    //       const d1 = await LoopRun(a, b,uniq_ArrayOf_All_local_Abroad_country);
-    //       array_of_html3.push(...d1)
-    //       a = b + 1;
-    //       b = b + 25;
-    //     }
+      let a = 0, b = 25;
+      for (let k = 1; k <=625;k++) {
+     console.log(k)
+        if (k == 625) {
+          const d1 = await LoopRun(a =15601 , b =15615,uniq_ArrayOf_All_local_Abroad_country);
+          array_of_html3.push(...d1)
+        }
+        else {
+          const d1 = await LoopRun(a, b,uniq_ArrayOf_All_local_Abroad_country);
+          array_of_html3.push(...d1)
+          a = b + 1;
+          b = b + 25;
+        }
 
-    //   }
-    //   return array_of_html2;
+      }
+      return array_of_html3;
     })
     .then(async(array_of_html3) =>{
-      console.log('array length of html3'+array_of_html3.length)
+      console.log('array length ofall  html3 : '+array_of_html3.length)
       if (array_of_html3 && Array.isArray(array_of_html3)) {
         let lists=[];
         for(let l=0;l<array_of_html3.length;l++){
           const ContactId=l+1;
-         const list=utils.getList_Of_Embassy_Cosulate(ContactId,array_of_html3[l], ArrayOf_All_Unique_local_Abroad_country[l])
+         const list=await utils.getList_Of_Embassy_Cosulate(ContactId,array_of_html3[l], ArrayOf_All_Unique_local_Abroad_country[l])
+        console.log(list);
          lists.push(list);
         }
-        final_List.push(...lists);
+        console.log("total no. of list : "+lists.length)
+       return lists;
       }
     })
-    .then(()=>{
-      
+    .then((lists)=>{
+      const transformed = new otcsv(lists);
+      return transformed.toDisk('./List_Of_Embassy_consulate.csv', { append: true, bom: true });
     })
-
     .then(() => {
-      console.log('successful');
+      console.log('successful complete');
     })
     .catch(err => {
       console.log(err)
     });
-
 }
 
 getList();

@@ -1,5 +1,5 @@
+'use strict';
 const $ = require('cheerio');
-
 
 exports.ArrayOf_Countries_Urls_By_html1 = (html1) => {
     const ArrayOf_Countries_Urls = [];
@@ -11,13 +11,9 @@ exports.ArrayOf_Countries_Urls_By_html1 = (html1) => {
     return ArrayOf_Countries_Urls;
 }
 
-
 exports.AbroadCountries_InLocalCountries_By_html2 = async (html2, RepresentationtLocCountry) => {
     const ArrayOf_abroadCountries_InLocalCountries = [];
-
     let abroadCountries_InLocalCountries = {};
-
-
     $('#posts-container>div:nth-child(3)>h2', html2).map((i, el) => {
 
         const RepresentationCountry = $(`#posts-container>div:nth-child(3)>h2`, html2)[i].children[0].data;
@@ -81,15 +77,10 @@ exports.LocalCountries_In_AbroadCountries__By_html2 = async (html2, Representati
 
 
     })
-   // console.log(ArrayOf_LocalCountries_In_AbroadCountries)
+    // console.log(ArrayOf_LocalCountries_In_AbroadCountries)
     return ArrayOf_LocalCountries_In_AbroadCountries;
 
 }
-
-
-
-
-
 
 const get_Type_Name_LocCity = (title) => {
 
@@ -123,63 +114,62 @@ const get_Type_Name_LocCity = (title) => {
 }
 
 
-exports.removeDuplicates=(originalArray)=> {
+exports.removeDuplicates = (originalArray) => {
     var newArray = [];
-    var lookupObject  = {};
+    var lookupObject = {};
 
-    for(var i in originalArray) {
-       lookupObject[originalArray[i].url] = originalArray[i];
+    for (var i in originalArray) {
+        lookupObject[originalArray[i].url] = originalArray[i];
     }
 
-    for(i in lookupObject) {
+    for (i in lookupObject) {
         newArray.push(lookupObject[i]);
     }
-     return newArray;
+    return newArray;
 }
 
+exports.getList_Of_Embassy_Cosulate = (contactID, html3, dataOf_2ndPage) => {
 
-exports.getList_Of_Embassy_Cosulate = (contactID,html3,dataOf_2ndPage) => {
-    
-           let ContactID, RepresentationAddress, RepresentationEmail,RepresentationCountry, RepresentationtLocCountry, RepresentationName,RepresentationFax,RepresentationType, RepresentationPhone, RepresentationLocCity, RepresentationWebsite
-            
-           ContactID=contactID;
-           if ($('.post-content>ul:nth-child(4)>li', html3).is('#address')) {
-              RepresentationAddress = $('.post-content>ul:nth-child(4)>#address', html3)[0].children[1].data;
-            }
-            if ($('.post-content>ul:nth-child(4)>li', html3).is('#email')) {
-                const emailCode = $('.post-content>ul:nth-child(4)>#email', html3)[0].children[1].attribs['data-cfemail']
-                RepresentationEmail = cfDecodeEmail(emailCode)
-            }
-           
-            if ($('.post-content>ul:nth-child(4)>li', html3).is('#fax')) {
-                RepresentationFax = $('.post-content>ul:nth-child(4)>#fax', html3)[0].children[1].data;
-            }
-       
-            if ($('.post-content>ul:nth-child(4)>li', html3).is('#phone')) {
-                RepresentationPhone = $('.post-content>ul:nth-child(4)>#phone', html3)[0].children[1].data;
-            }
-    
-            if ($('.post-content>ul:nth-child(4)>li', html3).is('#city')) {
-               const locCity= $('.post-content>ul:nth-child(4)>#city', html3)[0].children[1].data;
-                if(locCity){
-                    RepresentationLocCity=locCity;
-                }
-                else if(dataOf_2ndPage.RepresentationLocCity){
-                    RepresentationLocCity=dataOf_2ndPage.RepresentationLocCity;
-                }
-            }
-     
-            if ($('.post-content>ul:nth-child(4)>li', html3).is('#website')) {
-                RepresentationWebsite = $('.post-content>ul:nth-child(4)>#website', html3)[0].children[1].data;
-            }
+    let ContactID, RepresentationAddress, RepresentationEmail, RepresentationCountry, RepresentationtLocCountry, RepresentationName, RepresentationFax, RepresentationType, RepresentationPhone, RepresentationLocCity, RepresentationWebsite
 
-            RepresentationName= dataOf_2ndPage.RepresentationName,
-            RepresentationType= dataOf_2ndPage. RepresentationType,
-            RepresentationtLocCountry= dataOf_2ndPage. RepresentationtLocCountry,
-            RepresentationCountry=dataOf_2ndPage.RepresentationCountry;
-           
-            return ({ContactID, RepresentationAddress, RepresentationCountry,RepresentationEmail,RepresentationFax,  RepresentationLocCity, RepresentationName, RepresentationPhone,RepresentationType, RepresentationWebsite,RepresentationtLocCountry})
-       
+    ContactID = contactID;
+    if ($('.post-content>ul:nth-child(4)>li', html3).is('#address')) {
+        RepresentationAddress = $('.post-content>ul:nth-child(4)>#address', html3)[0].children[1].data;
+    }
+    if ($('.post-content>ul:nth-child(4)>li', html3).is('#email')) {
+        const emailCode = $('.post-content>ul:nth-child(4)>#email', html3)[0].children[1].attribs['data-cfemail']
+        RepresentationEmail = cfDecodeEmail(emailCode)
+    }
+
+    if ($('.post-content>ul:nth-child(4)>li', html3).is('#fax')) {
+        RepresentationFax = $('.post-content>ul:nth-child(4)>#fax', html3)[0].children[1].data;
+    }
+
+    if ($('.post-content>ul:nth-child(4)>li', html3).is('#phone')) {
+        RepresentationPhone = $('.post-content>ul:nth-child(4)>#phone', html3)[0].children[1].data;
+    }
+
+    if ($('.post-content>ul:nth-child(4)>li', html3).is('#city')) {
+        const locCity = $('.post-content>ul:nth-child(4)>#city', html3)[0].children[1].data;
+        if (locCity) {
+            RepresentationLocCity = locCity;
+        }
+        else if (dataOf_2ndPage.RepresentationLocCity) {
+            RepresentationLocCity = dataOf_2ndPage.RepresentationLocCity;
+        }
+    }
+
+    if ($('.post-content>ul:nth-child(4)>li', html3).is('#website')) {
+        RepresentationWebsite = $('.post-content>ul:nth-child(4)>#website', html3)[0].children[1].data;
+    }
+
+    RepresentationName = dataOf_2ndPage.RepresentationName,
+        RepresentationType = dataOf_2ndPage.RepresentationType,
+        RepresentationtLocCountry = dataOf_2ndPage.RepresentationtLocCountry,
+        RepresentationCountry = dataOf_2ndPage.RepresentationCountry;
+
+    return ({ ContactID:ContactID, RepresentationAddress:RepresentationAddress, RepresentationCountry:RepresentationCountry, RepresentationEmail:RepresentationEmail, RepresentationFax:RepresentationFax, RepresentationLocCity:RepresentationLocCity, RepresentationName:RepresentationName, RepresentationPhone:RepresentationPhone, RepresentationType:RepresentationType, RepresentationWebsite:RepresentationWebsite, RepresentationtLocCountry:RepresentationtLocCountry })
+
 
 }
 
